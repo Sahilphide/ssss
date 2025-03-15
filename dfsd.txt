@@ -1,0 +1,90 @@
+Patent Doc: WMT360 - Unified Observability and Monitoring Framework
+Abstract
+WMT360 is an advanced observability platform designed to address the challenges of monitoring and managing modern applications deployed across diverse infrastructure environments. It provides a comprehensive solution that integrates application and infrastructure metrics from multiple telemetry sources such as Prometheus and Watchtower. By offering centralized real-time monitoring, automated anomaly detection, predictive analytics, and business KPI tracking, WMT360 significantly reduces Mean Time to Resolution (MTTR) and Mean Time to Identify (MTTI). This document details the innovative approach behind WMT360 and its impact on improving system reliability and operational efficiency.
+1. Introduction
+Observability has become a critical aspect of modern enterprise application management due to the increasing complexity of distributed and multi-platform environments. Applications are often deployed across different infrastructure stacks, each with distinct security protocols, instrumentation requirements, and monitoring constraints. A unified observability and monitoring solution is essential to:
+Enable proactive issue detection and resolution.
+Improve system reliability and operational efficiency.
+Provide a seamless, multi-tenant monitoring experience.
+WMT360 is designed to bridge the gap between infrastructure and application observability by integrating Prometheus, Grafana, Watchtower, and other monitoring tools into a single, coherent platform. This document outlines the technical architecture, key challenges, and innovative methodologies employed in the WMT360 framework.
+2. Problem Statement
+Modern applications are deployed across multiple infrastructure platforms, each utilizing different telemetry methods. Some common platforms include:
+WinDeploy/WebFarm: Sends metrics/logs to Splunk.
+Treadmill: Sends metrics to Prometheus and logs to Splunk.
+MKS: Sends metrics to Prometheus and logs to Loki.
+Each of Application consists of various critical components such as:
+Infrastructure Components: Databases, Load Balancers, NAS, Message Queues (Kafka), etc.
+Compute Platforms: WinDeploy, WebFarm, Treadmill, MKS.
+Alerts: Originating from different infrastructure platforms, affecting internal and external environments.
+Business KPIs: E.g., number of logged-in customers, transaction success rates, API response time, etc.
+The lack of an integrated monitoring solution results in:
+Increased MTTR and MTTI due to fragmented data across different monitoring tools.
+Difficulty in correlating application performance with underlying infrastructure issues.
+Inefficient troubleshooting workflows due to reliance on multiple dashboards (e.g., Splunk, Watchtower, Grafana, batch monitoring tools).
+3. Solution Overview: WMT360
+WMT360 addresses these challenges by providing a centralized observability framework that integrates monitoring data across all major platforms, enabling rapid issue detection and resolution. The key features include:
+3.1 Infrastructure Monitoring with Watchtower
+WMT360 integrates with Watchtower to provide real-time insights into infrastructure performance. It tracks:
+NAS: I/O and usage percentage.
+Treadmill: Memory, CPU utilization, disk usage.
+Zapp: CPU idle time, I/O wait time, disk wait time.
+MQ (Message Queue): Depth, dequeue rate, message age.
+Load Balancer: Health status and request distribution.
+Kafka: Latency rate, consumer latency rate.
+DB2: Health status and query performance.
+Application: Up Health
+Each metric is categorized into three health statuses based upon the Thresholds:
+Green (OK): Normal operation.
+Yellow (Warning): Potential issue requiring attention.
+Red (Critical): Immediate action required.
+3.2 Application Health Monitoring Across Platforms
+WMT360 provides an integrated application monitoring solution across MKS, Treadmill, WinDeploy, and WebFarm. Key categories include:
+Application Metrics Monitoring: Tracks individual application health based on EON IDs, identifying real-time downtime.
+External Dependency Monitoring: Monitors third-party services that an application depends on, reducing the risk of cascading failures.
+Service Health on MKS: Tracks the status of microservices under the same namespace.
+Live Alerts for Treadmill and WinDeploy: Displays real-time alerts on dashboards.
+Platform-Specific Deployment Health Monitoring: Provides instance-wise health status across various platforms.
+3.3 Custom Business KPI Integration with Prometheus and Databases
+Beyond system metrics, applications generate custom business KPIs that offer deeper insights into application performance and user behavior. These KPIs may come from:
+Custom metrics exposed via ./metrics (e.g., API request count, transaction success rate, latency, etc.).
+Database-stored business KPIs (e.g., revenue, active users, order fulfillment rate).
+To integrate database-driven KPIs, WMT360 supports connections to:
+MySQL
+PostgreSQL
+These KPIs are visualized alongside application metrics in Grafana dashboards, providing a holistic monitoring solution that combines infrastructure, application, and business performance metrics into a single view.
+4. Technical Architecture
+4.1 Application Instrumentation
+Each application integrates an instrumentation library to expose application-specific metrics via an HTTP endpoint (./metrics). These metrics are periodically scraped by Prometheus.
+4.2 Prometheus Scraping Mechanism
+Prometheus follows a pull-based model, storing metrics along with essential labels such as:
+EON ID (Unique identifier for the application instance)
+Namespace (Application grouping)
+Platform (wmPrivate, WebFarm, WinDeploy, Treadmill)
+Environment (dev, qa, prod, etc.)
+4.3 Challenges in WebFarm & WinDeploy Environments
+Prometheus does not natively support SiteMinder/Kerberos authentication.
+Maintaining certificates and authentication tokens per application is infeasible.
+Lack of centralized service discovery, requiring manual onboarding with the help of Service Discovery .
+4.4 Multi-Tenant Observability in Grafana
+Aggregated metrics are visualized in Grafana, enabling:
+Cross-application monitoring through metric filters.
+Multi-tenant application visibility with EON ID-based filtering.
+Drill-down capabilities for real-time performance analysis.
+5. Key Innovations of WMT360
+Reduced MTTR & MTTI: Centralized monitoring accelerates troubleshooting.
+Comprehensive Multi-Layer Monitoring: Unified infrastructure and application observability.
+Platform-Specific Health Monitoring: Granular insights across platforms.
+Business KPI Integration: Tracks operational goals effectively.
+External Dependency Monitoring: Prevents cascading failures.
+Drill-Down Dashboards: Enables deep analysis of performance metrics.
+Unified Data Source Integration: Prometheus, Watchtower, SQL Database.
+6. Future Enhancements
+To further strengthen WMT360, future enhancements include:
+Distributed Tracing Integration: Enhanced service-to-service communication visibility.
+
+
+Multi-Tenancy Support: Isolated views for different teams or organizations.
+
+
+7. Conclusion
+WMT360 is a groundbreaking observability solution that provides real-time, centralized monitoring of applications and infrastructure across diverse platforms. By reducing MTTR and MTTI, enabling drill-down analytics, supporting business KPIs, and integrating multiple telemetry sources, WMT360 enhances operational efficiency and reliability. Future enhancements, will further solidify its position as a leading monitoring solution.
